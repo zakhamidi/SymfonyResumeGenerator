@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User Resume!{% endblock %}
+
+{% block body %}
+<style>
+#container {
+  margin: auto;
+  width: 60%;
+  border: 1px solid;
+  padding: 10px;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
+}
+</style>
+<div id="container">
+    <h1>Name : {{ user.username }}! ✅</h1>
+    Status : {{user.status}}<br>
+    _______________________________________________________________________________________________________
+
+    <table>
+        <tr><td><h3>Email </h3></td><td>:</td><td><h3> {{user.email}}</h3></td></tr>
+        {# check if the website existe or not #}
+        {% if user.website is not empty %}
+        <tr><td><h3>Website </h3></td><td>:</td><td><h3> {{user.website}}</h3></td></tr>
+        {% endif %}
+    </table>
+    _______________________________________________________________________________________________________
+    {# if there are no languages #}
+    {% if user.languages is not empty%}
+        <h2>Languages:</h2>
+        {# total of languages #}
+        {% set totallang= user.languages|length %}
+        ({{totallang}}) Times in total
+        <table style="width:10%"><tr>
+        {# get languages and remove duplicated languages then use the secon array to count how many time the vales are used #}
+        {% set newArray = [] %}
+        {% set i=0 %}
+            {% for language in user.languages%}
+                {% if language.type not in newArray %}
+                    <td>{{language.type}}</td><td>|</td>
+                    {% set newArray = newArray|merge([language.type]) %}
+                {% endif %}
+            {% endfor %}</tr><tr>
+        {% for count in newArray %}
+            {% for language in user.languages|sort %}
+                {% if language.type==count %}
+                    {% set i=i+1 %}
+                {% endif %}
+            {% endfor %}
+            <td>({{((i/totallang)*100)|round(2,'ceil')}}%)</td><td>|</td>
+            {% set i=0 %}
+        {% endfor %}</tr>
+        </table>
+    {% endif %}
+    _______________________________________________________________________________________________________
+    {# if there are no repositories #}
+    {% if user.therepos is not empty%}
+        <h2>Repositories:</h2>
+        {% for repository in user.Therepos%}
+            <table>
+                <tr><td>Name of repository</td><td>:</td><td>{{repository.reponame}}</td></tr>
+                <tr><td>Link</td><td>:</td><td><a href='{{repository.link}}'>{{repository.link}}</a></td></tr>
+                <tr><td>Description</td><td>:</td><td>{{repository.description}}</td></tr>
+            <table>
+        {% endfor %}
+    {% endif %}
+<a href=''><h3>go back</h3></a>
+</div>
+{% endblock %}
